@@ -1,6 +1,6 @@
 const express = require('express');
 const app = express();
-const port = 3000;
+const port = process.env.PORT || 3000;
 
 // Middleware para analizar el cuerpo de las solicitudes JSON
 app.use(express.json());
@@ -21,3 +21,4 @@ app.post('/datos-make', (req, res) => {
 app.listen(port, () => {
   console.log(`La API está escuchando en el puerto ${port}`);
 });
+

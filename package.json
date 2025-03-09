@@ -4,7 +4,9 @@
   "description": "conalot",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js"
+    "start": "node index.js",
+    "install-prod": "npm install --omit=dev"
+
   },
   "author": "anderson",
   "license": "ISC",

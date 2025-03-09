@@ -27,6 +27,26 @@ app.post('/datos-make', (req, res) => {
     res.status(500).send('Error interno del servidor.');
   }
 });
+app.get('/', (req, res) => {
+  const serverInfo = {
+    estado: 'activo',
+    timestamp: new Date().toISOString(),
+    servidor: {
+      plataforma: process.platform,
+      nodeVersion: process.version,
+      memoria: {
+        total: `${Math.round(process.memoryUsage().heapTotal / 1024 / 1024)} MB`,
+        usado: `${Math.round(process.memoryUsage().heapUsed / 1024 / 1024)} MB`
+      }
+    },
+    endpoints: {
+      get: '/ - Muestra esta información',
+      post: '/datos-make - Endpoint para recibir datos de Make'
+    }
+  };
+
+  res.json(serverInfo);
+});
 
 app.listen(port, () => {
   console.log(`La API está escuchando en el puerto ${port}`);

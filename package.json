@@ -4,7 +4,7 @@
   "description": "conalot",
   "main": "index.js",
   "scripts": {
-    "start": "npm install --omit=dev && node index.js",
+    "start": "node index.js",
     "install-prod": "npm install --omit=dev"
   },
   "author": "anderson",

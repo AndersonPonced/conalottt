@@ -20,39 +20,57 @@ app.post('/datos-make', (req, res) => {
     }
 
     const nuevoRegistro = {
-      id: req.body['ID (A)'],
-      nombreApellido: req.body['Nombre y Apellido (B)'],
-      cedula: req.body['cedula (C)'],
-      correo: req.body['correo (D)'],
-      telefono: req.body['telefono (E)'],
-      rs: req.body['RS (F)'],
-      fechaNacimiento: req.body['Fecha de nacimiento (G)'],
-      tipoPersona: req.body['persona Natural/Juridica (H)'],
-      nacionalidad: req.body['Nacionalidad (I)'],
-      estatura: req.body['Estatura (J)'],
-      peso: req.body['Peso (K)'],
-      contextura: req.body['Contextura (L)'],
-      colorOjos: req.body['Color de ojos (M)'],
-      colorCabello: req.body['Color de cabello (N)'],
-      leeEscribe: req.body['Lee y Escribe (O)'],
-      religion: req.body['Religión (P)'],
-      observaciones: req.body['Observaciones (Q)'],
-      nombrePadre: req.body['Nombre del padre (R)'],
-      nombreMadre: req.body['Nombre de la madre (S)'],
-      tieneHijos: req.body['Hijos (T)'],
-      cantidadHijos: req.body['Cantidad (U)'],
-      nombresHijos: req.body['Nombre de los hijos (V)'],
-      nombreRifa: req.body['Nombre de la rifa (W)'],
-      premios: req.body['Premios (X)'],
-      direccion: req.body['Dirección (Y)'],
-      fechasRifa: req.body['Fecha de incio y finalización (Z)'],
+      // Datos personales básicos
+      nombre: req.body.nombre || '',
+      apellido: req.body.apellido || '',
+      cedula: req.body.cedula || '',
+      fechaNacimiento: req.body.fechaNacimiento || '',
+      email: req.body.email || '',
+      telefono: req.body.telefono || '',
+      
+      // Lugar de origen
+      naturalDe: req.body.naturalDe || '',
+      nacionalidad: req.body.nacionalidad || '',
+      direccion: req.body.direccion || '',
+      
+      // Características físicas
+      estatura: req.body.estatura || '',
+      peso: req.body.peso || '',
+      contextura: req.body.contextura || '',
+      colorOjos: req.body.colorOjos || '',
+      colorCabello: req.body.colorCabello || '',
+      
+      // Educación y religión
+      lee: Boolean(req.body.lee),
+      escribe: Boolean(req.body.escribe),
+      religion: req.body.religion || '',
+      
+      // Observaciones
+      observaciones: req.body.observaciones || '',
+      
+      // Datos familiares
+      nombrePadre: req.body.nombrePadre || '',
+      nombreMadre: req.body.nombreMadre || '',
+      tieneHijos: Boolean(req.body.tieneHijos),
+      cantidadHijos: parseInt(req.body.cantidadHijos) || 0,
+      nombresHijos: req.body.nombresHijos || '',
+      
+      // Datos de la rifa
+      nombreRifa: req.body.nombreRifa || '',
+      premios: req.body.premios || '',
+      fechaInicio: req.body.fechaInicio || '',
+      fechaFin: req.body.fechaFin || '',
+      tipoLotería: req.body.tipoLotería || '',
+      
+      // Fotografía
+      fotografia: req.body.fotografia || '',
+
+      // Metadata
       fechaRegistro: new Date()
     };
 
-    // Agregar el nuevo registro al array
-    registros.unshift(nuevoRegistro); // Agregar al inicio del array
+    registros.unshift(nuevoRegistro);
     
-    // Mantener solo los últimos 100 registros (opcional)
     if (registros.length > 100) {
       registros = registros.slice(0, 100);
     }
@@ -66,9 +84,56 @@ app.post('/datos-make', (req, res) => {
 });
 
 app.get('/', (req, res) => {
+  const registrosLimpios = registros.map(registro => {
+    return {
+      datosPersonales: {
+        nombre: registro.nombre,
+        apellido: registro.apellido,
+        cedula: registro.cedula,
+        fechaNacimiento: registro.fechaNacimiento,
+        email: registro.email,
+        telefono: registro.telefono
+      },
+      lugarOrigen: {
+        naturalDe: registro.naturalDe,
+        nacionalidad: registro.nacionalidad,
+        direccion: registro.direccion
+      },
+      caracteristicasFisicas: {
+        estatura: registro.estatura,
+        peso: registro.peso,
+        contextura: registro.contextura,
+        colorOjos: registro.colorOjos,
+        colorCabello: registro.colorCabello
+      },
+      educacionReligion: {
+        lee: registro.lee,
+        escribe: registro.escribe,
+        religion: registro.religion
+      },
+      observaciones: registro.observaciones,
+      datosFamiliares: {
+        nombrePadre: registro.nombrePadre,
+        nombreMadre: registro.nombreMadre,
+        tieneHijos: registro.tieneHijos,
+        cantidadHijos: registro.cantidadHijos,
+        nombresHijos: registro.nombresHijos
+      },
+      datosRifa: {
+        nombreRifa: registro.nombreRifa,
+        premios: registro.premios,
+        fechaInicio: registro.fechaInicio,
+        fechaFin: registro.fechaFin,
+        tipoLotería: registro.tipoLotería
+      },
+      fotografia: registro.fotografia,
+      fechaRegistro: registro.fechaRegistro
+    };
+  });
+
   res.json({
-    totalRegistros: registros.length,
-    registros: registros
+    totalRegistros: registrosLimpios.length,
+    registros: registrosLimpios
   });
 });
 

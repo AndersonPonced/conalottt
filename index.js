@@ -2,23 +2,27 @@ const express = require('express');
 const app = express();
 const port = process.env.PORT || 3000;
 
-// Middleware para analizar el cuerpo de las solicitudes JSON
-app.use(express.json());
+// Endpoint GET para recibir datos de Make
+app.get('/datos-make', (req, res) => {
+  try {
+    const datos = req.query; // Los datos de GET se obtienen de req.query
 
-// Middleware para analizar el cuerpo de las solicitudes urlencoded
-app.use(express.urlencoded({ extended: true }));
+    if (!datos || Object.keys(datos).length === 0) {
+      console.log('Advertencia: No se recibieron datos de Make.');
+      return res.status(400).send('No se recibieron datos.');
+    }
 
-// Endpoint POST para recibir datos de Make
-app.post('/datos-make', (req, res) => {
-  const datos = req.body;
+    console.log('Datos recibidos de Make:', datos);
 
-  console.log('Datos recibidos de Make:', datos);
+    // Aquí puedes agregar lógica adicional para procesar los datos
 
-  // Envía un código de estado 204 (No Content)
-  res.status(204).send();
+    res.status(200).json(datos); // 200 OK - Éxito, devolvemos los datos recibidos
+  } catch (error) {
+    console.error('Error al procesar datos de Make:', error);
+    res.status(500).send('Error interno del servidor.');
+  }
 });
 
 app.listen(port, () => {
   console.log(`La API está escuchando en el puerto ${port}`);
 });
-

@@ -2,6 +2,9 @@ const express = require('express');
 const app = express();
 const port = process.env.PORT || 3000;
 
+// Agregamos la configuración del host
+const host = '0.0.0.0';
+
 // Middleware para analizar el cuerpo de las solicitudes JSON
 app.use(express.json());
 
@@ -28,6 +31,6 @@ app.post('/datos-make', (req, res) => {
   }
 });
 
-app.listen(port, () => {
-  console.log(`La API está escuchando en el puerto ${port}`);
+app.listen(port, host, () => {
+  console.log(`La API está escuchando en http://${host}:${port}`);
 });

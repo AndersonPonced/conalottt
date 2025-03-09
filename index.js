@@ -2,14 +2,14 @@ const express = require('express');
 const app = express();
 const port = process.env.PORT || 3000;
 
+// Almacenamiento temporal en memoria
+let registros = [];
+
 // Middleware para analizar el cuerpo de las solicitudes JSON
 app.use(express.json());
 
 // Middleware para analizar el cuerpo de las solicitudes urlencoded
 app.use(express.urlencoded({ extended: true }));
-
-// Almacenamiento temporal de datos
-let datosRegistro = null;
 
 // Endpoint POST para recibir datos de Make
 app.post('/datos-make', (req, res) => {
@@ -19,8 +19,7 @@ app.post('/datos-make', (req, res) => {
       return res.status(400).send('Solicitud POST sin cuerpo de datos.');
     }
 
-    // Estructura esperada de los datos
-    datosRegistro = {
+    const nuevoRegistro = {
       id: req.body['ID (A)'],
       nombreApellido: req.body['Nombre y Apellido (B)'],
       cedula: req.body['cedula (C)'],
@@ -46,11 +45,20 @@ app.post('/datos-make', (req, res) => {
       nombreRifa: req.body['Nombre de la rifa (W)'],
       premios: req.body['Premios (X)'],
       direccion: req.body['Dirección (Y)'],
-      fechasRifa: req.body['Fecha de incio y finalización (Z)']
+      fechasRifa: req.body['Fecha de incio y finalización (Z)'],
+      fechaRegistro: new Date()
     };
 
-    console.log('Datos recibidos:', datosRegistro);
-    res.status(200).json(datosRegistro);
+    // Agregar el nuevo registro al array
+    registros.unshift(nuevoRegistro); // Agregar al inicio del array
+    
+    // Mantener solo los últimos 100 registros (opcional)
+    if (registros.length > 100) {
+      registros = registros.slice(0, 100);
+    }
+
+    console.log('Datos recibidos:', nuevoRegistro);
+    res.status(200).json(nuevoRegistro);
   } catch (error) {
     console.error('Error al procesar datos:', error);
     res.status(500).json({ error: 'Error interno del servidor' });
@@ -58,11 +66,10 @@ app.post('/datos-make', (req, res) => {
 });
 
 app.get('/', (req, res) => {
-  if (datosRegistro) {
-    res.json(datosRegistro);
-  } else {
-    res.json({ mensaje: 'No hay datos registrados' });
-  }
+  res.json({
+    totalRegistros: registros.length,
+    registros: registros
+  });
 });
 
 app.listen(port, () => {

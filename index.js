@@ -11,6 +11,13 @@ app.use(express.json());
 // Middleware para analizar el cuerpo de las solicitudes urlencoded
 app.use(express.urlencoded({ extended: true }));
 
+// Agregar CORS para permitir peticiones desde otra página
+app.use((req, res, next) => {
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+  next();
+});
+
 // Endpoint POST para recibir datos de Make
 app.post('/datos-make', (req, res) => {
   try {

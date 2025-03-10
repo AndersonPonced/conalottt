@@ -27,7 +27,7 @@ app.post('/datos-make', (req, res) => {
     }
 
     const nuevoRegistro = {
-      Id: req.body.Id || '',
+      id: req.body.id || '',
       nombre: req.body.nombre || '',
       apellido: req.body.apellido || '',
       cedula: req.body.cedula || '',
@@ -70,6 +70,18 @@ app.post('/datos-make', (req, res) => {
   } catch (error) {
     console.error('Error al procesar datos:', error);
     res.status(500).json({ error: 'Error interno del servidor' });
+  }
+});
+
+// Nuevo endpoint para buscar por ID
+app.get('/buscar/:id', (req, res) => {
+  const id = req.params.id;
+  const registro = registros.find(r => r.id === id);
+  
+  if (registro) {
+    res.json(registro);
+  } else {
+    res.status(404).json({ error: 'No se encontró ningún registro con ese ID' });
   }
 });
 

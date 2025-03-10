@@ -27,6 +27,7 @@ app.post('/datos-make', (req, res) => {
     }
 
     const nuevoRegistro = {
+      Id: req.body.Id || '',
       nombre: req.body.nombre || '',
       apellido: req.body.apellido || '',
       cedula: req.body.cedula || '',
